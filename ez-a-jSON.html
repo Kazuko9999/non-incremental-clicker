@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <button onclick="klick()">kattint</button>
+        <button onclick="save()">mentés</button>
+        <button onclick="load()">betölt</button>
+        <button onclick="setAutoSave(event)">autosave off</button>
+    </div>
+    <span>0</span>
+    <script defer>
+        const score = document.querySelector("span") // az elso "span" elemet választotta ki
+        //let tempScore = 0
+        let temp = {
+            score: 0,
+            autosave: "off",
+        } // tömb. hivatkozás --- temp.score / temp.autosave
+        function klick() {
+            temp.score = score.innerHTML;
+            temp.score++;
+            score.innerHTML = temp.score;
+
+            if (JSON.parse(localStorage.getItem("temp")).autosave.includes("on")) {
+            save();
+        }  //JSON.parse -- egy stringet JSON formátumba alakít, ha valid
+        }
+
+        function save() {
+            localStorage.setItem("temp", JSON.stringify(temp)) //JSON elemet átír string formátumba
+            console.log(localStorage.getItem("temp"))
+        }
+        // localstorage.setItem --- helyileg letárolja az adott elemet
+        // localStorage.getItem --- helyi storage-ból lehív egy elemet (ha nem létezik nem tudja)
+
+        function load() {
+            temp = JSON.parse(localStorage.getItem("temp"));
+            score.innerHTML = temp.score
+        }
+        function setAutoSave(event) {
+            if (JSON.parse(localStorage.getItem("temp")).autosave.includes("off")) {
+                temp.autosave = "on"
+                event.currentTarget.innerHTML = "autosave on"
+            }
+            else if (JSON.parse(localStorage.getItem("temp")).autosave.includes("on")) {
+                temp.autosave = "off"
+                event.currentTarget.innerHTML = "autosave off"
+            }
+            save()
+        }
+
+
+    </script>
+</body>
+
+</html>

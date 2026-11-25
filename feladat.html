@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="loadProgress">
+        <button onclick="loadProgress()"><img src="load.png" alt=""></button>
+    </div>
+    <div class="resources">
+        <ul>
+            <li>Wood: <span id="resWood">0</span> </li>
+            <li>Ore: <span id="resOre">0</span> </li>
+            <li>Food: <span id="resFood">0</span> </li>
+            <li>Gold: <span id="resGold">0</span> </li>
+        </ul>
+    </div>
+    <div class="main-cont">
+        <div class="production-title">
+            <h1 class="title">not-idle incremental</h1>
+        </div>
+        <div class="miners-cont">
+            <div class="production-item" id="forest">
+                <button onclick="cutWood()" id="production1">MENNY FÁT VÁGNI<img src="forestcube.png" alt=""></button>
+
+            </div>
+            <div class="production-item" id="mine">
+                <button onclick="mineOre()" id="production2">YEARN FOR THE MINES <img src="minecube.png"
+                        alt=""></button>
+            </div>
+            <div class="production-item" id="river">
+                <button onclick="fishFish()" id="production3">fish🤮🤮🤮 <img src="fishcube.png" alt=""></button>
+            </div>
+            <div class="production-item" id="battle">
+                <button onclick="killEnemy()" id="production4">slaughter <span class="enemy">goblins</span> <img
+                        src="combatcube.png" alt=""></button>
+            </div>
+        </div>
+    </div>
+    <div class="upgrades-cont">
+        <div class="villages-upgrades">
+            <div>
+                <h3 style="text-align: center;" >Increase villagers</h3>
+            </div>
+            <div class="inc-upgrades">
+                <div class="inc-wood-Upg"><button class="villager-btn"  >cutting wood </button></div>
+                <div class="inc-wood-Upg"><button class="villager-btn"  >mining ore</button></div>
+                <div class="inc-wood-Upg"><button class="villager-btn"  >fishing for food</button></div>
+                <div class="inc-wood-Upg"><button class="villager-btn"  >slaying <span
+                            class="enemy">goblins</span></button></div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script defer>
+        let resources = {
+            wood: 0,
+            ore: 0,
+            food: 0,
+            gold: 0
+        }
+        let enemyTypeHolder = document.getElementsByClassName("enemy")
+        let woodHolder = document.getElementById("resWood")
+        let oreHolder = document.getElementById("resOre")
+        let foodHolder = document.getElementById("resFood")
+        let goldHolder = document.getElementById("resGold")
+
+        let villagerUpgCont = document.querySelectorAll(".villager-btn")
+
+        let woodVillager = 1
+        let oreVillager = 1
+        let foodVillager = 1
+        let killVillager = 1
+        
+        let woodMult = 1
+        let oreMult = 1
+        let foodMult = 1
+        let killMult = 1
+
+        function saveProgress() {
+            localStorage.setItem("resources", JSON.stringify(resources))
+            console.log(localStorage.getItem("resources"))
+        }
+        function loadProgress() {
+            resources = JSON.parse(localStorage.getItem("resources"))
+            woodHolder.innerHTML = resources.wood
+            oreHolder.innerHTML = resources.ore
+            foodHolder.innerHTML = resources.food
+            goldHolder.innerHTML = resources.gold
+        }
+        function cutWood() {
+            resources.wood += woodVillager * woodMult
+            woodHolder.innerHTML = resources.wood // upgrades DO IT
+            saveProgress()
+        }
+        function mineOre() {
+            resources.ore++
+            oreHolder.innerHTML = resources.ore
+            saveProgress()
+        }
+        function fishFish() {
+            resources.food++
+            foodHolder.innerHTML = resources.food
+            saveProgress()
+        }
+        function killEnemy() {
+            resources.gold++
+            goldHolder.innerHTML = resources.gold
+            saveProgress()
+        }
+
+        function upgVillagersClick(){
+            villagerUpgCont.forEach(element => element.addEventListener("click",upgVillagers))
+        }
+        function upgVillagers(event){  
+            console.log(event.currentTarget.innerHTML+ " clicked")
+          }
+        upgVillagersClick()
+    </script>
+
+</body>
+
+</html>
