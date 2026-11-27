@@ -53,6 +53,7 @@ body {
 }
 
 button {
+    background-color: white;
     font-family: "Science Gothic", sans-serif;
     font-optical-sizing: auto;
     font-weight: 900;
@@ -84,24 +85,73 @@ img {
     background-color: #ffffffa7;
 }
 
-.upgrades-cont{
-    width: 70%;
-    display: flex ;
-    margin-left: auto;
-    flex-direction: column;
+.upgrades-cont {
+    padding: 5px;
+    width: 90%;
+    display: flex;
+    margin: auto;
+    flex-direction: row-reverse;
+    margin-top: 8em;
+    justify-content: space-between;
 }
-.villages-upgrades{
-    width: 50%;
-    margin-left: auto;
+
+.villages-upgrades {
+    width: 30%;
     display: flex;
     flex-direction: column;
 }
-.villager-btn{
+
+.villager-btn {
     height: 100%;
 }
 
+#villagerCostCont {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    width: 200px;
+    margin: auto;
+}
 
-.inc-upgrades{
+#villagerCostEach {
+    margin: auto;
+    text-align: center;
+    width: 40px;
+}
+
+
+#villagerCostTxt {
+    margin: auto;
+    text-align: center;
+    width: 200px;
+}
+
+.inc-upgrades {
     display: flex;
     flex-direction: row;
 }
+
+.starter-upgrades{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.production-upgrades{
+    width: 70%;
+}
+
+.mult-upgHolder{
+
+    width: 15em;
+}
+
+.mult-upgButton{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 15em;
+    height: 10em;
+}
+
+@keyframes cooldown{}

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="loadProgress">
+        <button onclick="loadProgress()"><img src="load.png" alt=""></button>
+    </div>
+    <div class="resources">
+        <ul>
+            <li>Wood: <span id="resWood">0</span> </li>
+            <li>Ore: <span id="resOre">0</span> </li>
+            <li>Food: <span id="resFood">0</span> </li>
+            <li>Gold: <span id="resGold">0</span> </li>
+        </ul>
+    </div>
+    <div class="main-cont">
+        <div class="production-title">
+            <h1 class="title">not-idle incremental</h1>
+        </div>
+        <div class="miners-cont">
+            <div class="production-item" id="forest">
+                <button onclick="cutWood()" class="prodButtonsCollective" id="production1">MENNYÉ FÁT VÁGNI<img
+                        src="forestcube.png" alt=""></button>
+
+            </div>
+            <div class="production-item" id="mine">
+                <button onclick="mineOre()" class="prodButtonsCollective" id="production2">YEARN FOR THE MINES <img
+                        src="minecube.png" alt=""></button>
+            </div>
+            <div class="production-item" id="river">
+                <button onclick="fishFish()" class="prodButtonsCollective" id="production3">fish🤮🤮🤮 <img
+                        src="fishcube.png" alt=""></button>
+            </div>
+            <div class="production-item" id="battle">
+                <button onclick="killEnemy()" class="prodButtonsCollective" id="production4">slaughter <span
+                        class="enemy">goblins</span> <img src="combatcube.png" alt=""></button>
+            </div>
+        </div>
+    </div>
+    <div class="upgrades-cont">
+        <div class="villages-upgrades">
+            <div>
+                <h3 style="text-align: center;">Increase villagers</h3>
+                <div id="villagerCostCont">
+                    <div id="villagerCostEach">40</div>
+                    <div id="villagerCostTxt">Food per villager</div>
+                </div>
+            </div>
+            <div class="inc-upgrades">
+                <div class="inc-wood-Upg"><button class="villager-btn">cutting wood </button></div>
+                <div class="inc-wood-Upg"><button class="villager-btn">mining ore</button></div>
+                <div class="inc-wood-Upg"><button class="villager-btn">fishing for food</button></div>
+                <div class="inc-wood-Upg"><button class="villager-btn">slaying goblins</button></div>
+            </div>
+        </div>
+        <div class="production-upgrades">
+            <div><h3 style="text-align: center;" >Enhance producers</h3></div>
+            <div class="starter-upgrades">
+                <div class="mult-upgHolder"> <button class="mult-upgButton" id="multUpgButton1">Tougher trees<span id="tougherTreesCC">50</span> wood </button> </div>
+                <div class="mult-upgHolder"> <button class="mult-upgButton" id="multUpgButton2">Rarer ores  <span id="rarerOresCC">50</span> ore</button> </div>
+                <div class="mult-upgHolder"> <button class="mult-upgButton" id="multUpgButton3">bigger fish <span id="biggerFishCC1">150</span><span id="biggerFishCC2"> 50</span>food - gold
+                    </button> </div>
+                <div class="mult-upgHolder"> <button class="mult-upgButton" id="multUpgButton4">stronger gear <span id="strongerGearCC">200</span> gold </button></div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script defer>
+        //stored data in local storage
+        let resources = {
+            wood: 0,
+            ore: 0,
+            food: 0,
+            gold: 0,
+        }
+        let villagers = {
+            villagerCost: 40,
+            villagerWood: 1,
+            villagerOre: 1,
+            villagerFood: 1,
+            villagerKill: 1,
+            villagerWoodMult: 1,
+            villagerOreMult: 1,
+            villagerFoodMult: 1,
+            villagerKillMult: 1,
+        }
+        // variables for visual changing of elements
+        let enemyTypeHolder = document.getElementsByClassName("enemy")
+        let woodHolder = document.getElementById("resWood")
+        let oreHolder = document.getElementById("resOre")
+        let foodHolder = document.getElementById("resFood")
+        let goldHolder = document.getElementById("resGold")
+
+        let villagerUpgCont = document.querySelectorAll(".villager-btn")
+        let villagerCostCont = document.getElementById("villagerCostCont")
+        let villagerCostEach = document.getElementById("villagerCostEach")
+
+        let tougherTreesCC = document.getElementById("tougherTreesCC")
+        let tougherTreesCost = tougherTreesCC.innerHTML * 1
+        let biggerFishCC1 = document.getElementById("biggerFishCC1")
+        let biggerFishCC2 = document.getElementById("biggerFishCC2")
+        let biggerFishCost1 = biggerFishCC1.innerHTML * 1
+        let biggerFishCost2 = biggerFishCC2.innerHTML * 1
+        let rarerOresCC = document.getElementById("rarerOresCC")
+        let rarerOresCost = rarerOresCC.innerHTML * 1
+        let strongerGearCC = document.getElementById("strongerGearCC")
+        let strongerGearCost = strongerGearCC.innerHTML * 1
+
+        
+        //saving and loading to localStorage
+        function saveProgress() {
+            localStorage.setItem("resources", JSON.stringify(resources))
+            localStorage.setItem("villagers", JSON.stringify(villagers))
+        }
+        function loadProgress() {
+            resources = JSON.parse(localStorage.getItem("resources"))
+            woodHolder.innerHTML = resources.wood
+            oreHolder.innerHTML = resources.ore
+            foodHolder.innerHTML = resources.food
+            goldHolder.innerHTML = resources.gold
+            villagers = JSON.parse(localStorage.getItem("villagers"))
+            villagerCostEach.innerHTML = villagers.villagerCost
+        }
+        
+
+        let multiUpgButtons = document.querySelectorAll(".mult-upgButton")
+        function multUpgClickDetect(){
+            multiUpgButtons.forEach(element => element.addEventListener("click",multUpgPleaseWork))
+        }
+
+        function multUpgPleaseWork(event){
+            if (event.currentTarget.innerHTML.includes("Tougher trees")){
+                    if(resources.wood >= tougherTreesCost){
+                         console.log("sikeres purchase")
+                        resources.wood -= tougherTreesCost
+                        woodHolder = resources.wood
+                        tougherTreesCost = Math.round(tougherTreesCost * 1.15)
+                        tougherTreesCC.innerHTML = tougherTreesCost
+                        saveProgress()
+
+                    }else {console.log("unsuccessfull vasarlas")}
+            }
+
+                
+        }
+        
+        
+        
+        //cooldown on buttons
+        // when called disables the buttons
+        let prodButtonButtonsC = document.querySelectorAll(".prodButtonsCollective")
+        function coolDown() {
+            for (let i = 0; i < prodButtonButtonsC.length; i++) {
+                prodButtonButtonsC[i].disabled = true
+                setTimeout(function () { prodButtonButtonsC[i].disabled = false }, 500); // make the 500 into a variable and allow upgrading it to less/ no cooldown
+
+            }
+        }
+        function cooldownStyle() {
+            for (let i = 0; i < prodButtonButtonsC.length; i++) {
+                prodButtonButtonsC[i].style.animation = "cooldown 0.5"
+
+            }
+        }
+        function cooldownStyleCall() {
+            for (let i = 0; i < prodButtonButtonsC.length; i++) {
+                setTimeout(cooldownStyle, 0)
+                prodButtonButtonsC[i].style.animation = "none"
+
+            }
+        }
+        // make the cooldown have a style
+
+        function cutWood() {
+            coolDown()
+            resources.wood += Math.round(villagers.villagerWood * villagers.villagerWoodMult)
+            woodHolder.innerHTML = resources.wood
+            saveProgress()
+        }
+        function mineOre() {
+            coolDown()
+            resources.ore += Math.round(villagers.villagerWood * villagers.villagerWoodMult)
+            oreHolder.innerHTML = resources.ore
+            saveProgress()
+        }
+        function fishFish() {
+            coolDown()
+            resources.food += Math.round(villagers.villagerFood * villagers.villagerFoodMult)
+            foodHolder.innerHTML = resources.food
+            saveProgress()
+        }
+        function killEnemy() {
+            coolDown()
+            resources.gold += Math.round(villagers.villagerKill * villagers.villagerKillMult)
+            goldHolder.innerHTML = resources.gold
+            saveProgress()
+        }
+
+        function upgVillagersClick() {
+            villagerUpgCont.forEach(element => element.addEventListener("click", upgVillagers))
+        }
+        function upgVillagers(event) {
+            /*console.log(event.currentTarget.innerHTML + " clicked")*/
+
+
+            if (resources.food >= villagerCostEach.innerHTML * 1) {
+                console.log(event.currentTarget.innerHTML)
+                resources.food -= villagerCostEach.innerHTML * 1
+                villagerCostEach.innerHTML = Math.round(villagerCostEach.innerHTML * 1.15)
+                foodHolder.innerHTML = resources.food
+                villagers.villagerCost = villagerCostEach.innerHTML * 1
+                saveProgress()
+                switch (event.currentTarget.innerHTML.trim()) {
+                    case "cutting wood":
+                        villagers.villagerWood += 1
+                        saveProgress()
+                        break;
+                    case "mining ore":
+                        villagers.villagerOre += 1
+                        saveProgress()
+                        break;
+                    case "fishing for food":
+                        if (villagers.villagerFood < 10) {
+                            villagers.villagerFood += 1
+                            saveProgress()
+                            break;
+                        } else {
+                            alert("maximum 10 falusi mehet ételért")
+                            villagers.villagerFood += villagerCostEach.innerHTML * 1
+                        }
+                    default:
+                        slayEnemiesVU()
+                        console.log("test")
+                }
+            }
+            else (alert("Not enough food"))
+        }
+        function slayEnemiesVU() {
+            villagers.villagerKill += 1
+            saveProgress()
+        }
+        multUpgClickDetect()
+        upgVillagersClick()
+    </script>
+
+</body>
+
+</html>
