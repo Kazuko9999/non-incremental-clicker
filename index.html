@@ -65,9 +65,9 @@
             <div class="starter-upgrades">
                 <div class="mult-upgHolder"> <button class="mult-upgButton" id="multUpgButton1">Tougher trees<span id="tougherTreesCC">50</span> wood </button> </div>
                 <div class="mult-upgHolder"> <button class="mult-upgButton" id="multUpgButton2">Rarer ores  <span id="rarerOresCC">50</span> ore</button> </div>
-                <div class="mult-upgHolder"> <button class="mult-upgButton" id="multUpgButton3">bigger fish <span id="biggerFishCC1">150</span><span id="biggerFishCC2"> 50</span>food - gold
+                <div class="mult-upgHolder"> <button class="mult-upgButton" id="multUpgButton3">Bigger fish <span id="biggerFishCC1">150</span><span id="biggerFishCC2"> 50</span>food - gold
                     </button> </div>
-                <div class="mult-upgHolder"> <button class="mult-upgButton" id="multUpgButton4">stronger gear <span id="strongerGearCC">200</span> gold </button></div>
+                <div class="mult-upgHolder"> <button class="mult-upgButton" id="multUpgButton4">Sronger gear <span id="strongerGearCC">200</span> gold </button></div>
             </div>
         </div>
     </div>
@@ -123,10 +123,10 @@
         }
         function loadProgress() {
             resources = JSON.parse(localStorage.getItem("resources"))
-            woodHolder.innerHTML = resources.wood
-            oreHolder.innerHTML = resources.ore
-            foodHolder.innerHTML = resources.food
-            goldHolder.innerHTML = resources.gold
+            woodHolder.innerHTML = Math.round((resources.wood*100)/100)
+            oreHolder.innerHTML = Math.round((resources.ore*100)/100)
+            foodHolder.innerHTML = Math.round((resources.food*100)/100)
+            goldHolder.innerHTML = Math.round((resources.gold*100)/100)
             villagers = JSON.parse(localStorage.getItem("villagers"))
             villagerCostEach.innerHTML = villagers.villagerCost
         }
@@ -142,13 +142,49 @@
                     if(resources.wood >= tougherTreesCost){
                          console.log("sikeres purchase")
                         resources.wood -= tougherTreesCost
-                        woodHolder = resources.wood
                         tougherTreesCost = Math.round(tougherTreesCost * 1.15)
                         tougherTreesCC.innerHTML = tougherTreesCost
+                        woodHolder.innerHTML = Math.round((resources.wood*100)/100)
+                        villagers.villagerWoodMult += 0.1
+
                         saveProgress()
 
                     }else {console.log("unsuccessfull vasarlas")}
             }
+
+            if (event.currentTarget.innerHTML.includes("Rarer ores")){
+                    if(resources.ore >= rarerOresCost){
+                         console.log("sikeres purchase")
+                        resources.ore -= rarerOresCost
+                        rarerOresCost = Math.round(rarerOresCost * 1.25)
+                        rarerOresCC.innerHTML = rarerOresCost
+                        oreHolder.innerHTML = Math.round((resources.ore*100)/100)
+                        villagers.villagerOreMult += 0.1
+
+                        saveProgress()
+
+                    }else {console.log("unsuccessfull vasarlas")}
+            }
+
+            if (event.currentTarget.innerHTML.includes("Bigger fish")){
+                    if(resources.food >= biggerFishCost1 || resources.gold >= biggerFishCost2){
+                         console.log("sikeres purchase")
+                        resources.food -= biggerFishCost1
+                        resources.gold -= biggerFishCost2
+                        biggerFishCost1 = Math.round(biggerFishCost1 * 1.25)
+                        biggerFishCost2 = Math.round(biggerFishCost2 * 1.25)
+                        biggerFishCC1.innerHTML = biggerFishCC1
+                        biggerFishCC2.innerHTML = biggerFishCC2
+                        foodHolder.innerHTML = Math.round((resources.food*100)/100)
+                        gold.oreHolder.innerHTML = Math.round((resources.food*100)/100)
+                        villagers.villagerFoodMult += 0.1
+                        //nemjo
+
+                        saveProgress()
+
+                    }else {console.log("unsuccessfull vasarlas")}
+            }
+
 
                 
         }
@@ -182,26 +218,26 @@
 
         function cutWood() {
             coolDown()
-            resources.wood += Math.round(villagers.villagerWood * villagers.villagerWoodMult)
-            woodHolder.innerHTML = resources.wood
+            resources.wood += Math.round((villagers.villagerWood * villagers.villagerWoodMult)*100)/100
+            woodHolder.innerHTML = Math.round(resources.wood*100)/100
             saveProgress()
         }
         function mineOre() {
             coolDown()
-            resources.ore += Math.round(villagers.villagerWood * villagers.villagerWoodMult)
-            oreHolder.innerHTML = resources.ore
+            resources.ore += Math.round((villagers.villagerOre * villagers.villagerOreMult)*100)/100
+            oreHolder.innerHTML = Math.round(resources.ore*100)/100
             saveProgress()
         }
         function fishFish() {
             coolDown()
-            resources.food += Math.round(villagers.villagerFood * villagers.villagerFoodMult)
-            foodHolder.innerHTML = resources.food
+            resources.food += Math.round((villagers.villagerFood * villagers.villagerFoodMult)*100)/100
+            foodHolder.innerHTML = Math.round(resources.food*100)/100
             saveProgress()
         }
         function killEnemy() {
             coolDown()
-            resources.gold += Math.round(villagers.villagerKill * villagers.villagerKillMult)
-            goldHolder.innerHTML = resources.gold
+            resources.gold += Math.round((villagers.villagerKill * villagers.villagerKillMult)*100)/100
+            goldHolder.innerHTML = Math.round(resources.gold*100)/100
             saveProgress()
         }
 
@@ -235,7 +271,7 @@
                             break;
                         } else {
                             alert("maximum 10 falusi mehet ételért")
-                            villagers.villagerFood += villagerCostEach.innerHTML * 1
+                            resources.food += villagerCostEach.innerHTML * 1
                         }
                     default:
                         slayEnemiesVU()
